@@ -1,0 +1,12 @@
+.env
+
+sshkey
+sshkey.pub
+
+.terraform
+terraform.tfstate
+terraform.tfstate.backup
+
+_*.ok
+
+manifest.json

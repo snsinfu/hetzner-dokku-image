@@ -1,0 +1,48 @@
+{
+    "variables": {
+        "hcloud_token": "{{ env `HCLOUD_TOKEN` }}",
+        "hcloud_location": "{{ env `HCLOUD_LOCATION` }}",
+        "hcloud_type": "{{ env `HCLOUD_TYPE` }}",
+        "hcloud_image": "debian-9"
+    },
+
+    "builders": [
+        {
+            "type": "hcloud",
+            "token": "{{ user `hcloud_token` }}",
+            "location": "{{ user `hcloud_location` }}",
+            "server_type": "{{ user `hcloud_type` }}",
+            "source_image": "{{ user `hcloud_image` }}",
+            "image_name": "dokku",
+            "ssh_username": "root"
+        }
+    ],
+
+    "provisioners": [
+        {
+            "type": "file",
+            "source": "{{ template_dir }}/assets",
+            "destination": "/tmp"
+        },
+        {
+            "type": "shell",
+            "scripts": [
+                "{{ template_dir }}/scripts/apt.sh",
+                "{{ template_dir }}/scripts/firewall.sh",
+                "{{ template_dir }}/scripts/ssh.sh",
+                "{{ template_dir }}/scripts/docker.sh",
+                "{{ template_dir }}/scripts/dokku.sh",
+                "{{ template_dir }}/scripts/cloudinit.sh",
+                "{{ template_dir }}/scripts/cleanup.sh"
+            ]
+        }
+    ],
+
+    "post-processors": [
+        {
+            "type": "manifest",
+            "output": "manifest.json",
+            "strip_path": true
+        }
+    ]
+}
